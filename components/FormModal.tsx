@@ -16,7 +16,7 @@ export default function Modal({ isOpen, onClose }: ModalProps) {
     { "opacity-50 cursor-progress": isPending },
   );
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (isPending) return;
