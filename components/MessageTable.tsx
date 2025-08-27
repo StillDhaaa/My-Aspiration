@@ -40,10 +40,12 @@ export default function MessageTable() {
             key={item.id}
             className="relative flex w-11/12 flex-col gap-1 rounded-2xl border-[1.5px] border-black bg-white px-6 py-3 pb-6 text-black"
           >
-            <div className="text-[25px]">
+            <div className="text-[25px] break-words whitespace-pre-wrap">
               {item.name ? item.name : "Anonymous"}
             </div>
-            <div className="font-Nunito -mt-2 ml-1 pb-2">{item.message}</div>
+            <div className="font-Nunito -mt-2 ml-1 pb-2 break-words whitespace-pre-wrap">
+              {item.message}
+            </div>
             <div className="font-Nunito absolute right-5 bottom-0 max-md:text-[10px]">
               {formatTime(item.created_at)}
             </div>

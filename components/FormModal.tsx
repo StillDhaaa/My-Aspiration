@@ -64,11 +64,13 @@ export default function Modal({ isOpen, onClose }: ModalProps) {
       <div className="font-Poppins w-96 rounded-2xl bg-white p-6 text-cyan-700 shadow-lg">
         <h2 className="mb-4 text-xl font-bold text-sky-400">Add Message</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <label htmlFor="Name" className="ml-1">
+          <label htmlFor="name" className="ml-1">
             Name
           </label>
           <input
+            id="name"
             type="text"
+            maxLength={50}
             placeholder={`Input your name or empty for Anonymous`}
             onChange={(e) =>
               setNewAspiration((prev) => ({ ...prev, name: e.target.value }))
@@ -80,6 +82,7 @@ export default function Modal({ isOpen, onClose }: ModalProps) {
           </label>
           <textarea
             id="Message"
+            maxLength={350}
             placeholder={`Type Your Message Here!`}
             onChange={(e) =>
               setNewAspiration((prev) => ({ ...prev, message: e.target.value }))
