@@ -9,7 +9,7 @@ interface Aspiration {
   message: string;
 }
 
-export default function MessageTable() {
+export default function MessageTable({ refreshFlag }: { refreshFlag: number }) {
   const [aspiration, setAspiration] = useState<Aspiration[]>([]);
 
   const fetchTask = async () => {
@@ -26,7 +26,7 @@ export default function MessageTable() {
 
   useEffect(() => {
     fetchTask();
-  }, []);
+  }, [refreshFlag]);
   console.log(aspiration);
 
   return (

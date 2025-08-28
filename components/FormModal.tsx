@@ -5,15 +5,18 @@ import clsx from "clsx";
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
-export default function Modal({ isOpen, onClose }: ModalProps) {
+export default function Modal({ isOpen, onClose, onSuccess }: ModalProps) {
   const [newAspiration, setNewAspiration] = useState({ name: "", message: "" });
   const [message, setMessage] = useState("");
   const [isPending, setIsPending] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const className = clsx(
     "rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 font-Nunito",
-    { "opacity-50 cursor-progress": isPending },
+    { " cursor-progress": isPending },
+    { "cursor-not-allowed opacity-50": isSuccess },
   );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -31,23 +34,28 @@ export default function Modal({ isOpen, onClose }: ModalProps) {
 
     try {
       setIsPending(true);
-
       const { error } = await supabase.from("aspiration").insert(newAspiration);
-
       if (error) throw error;
 
       localStorage.setItem("lastSentTime", now.toString());
 
       setMessage("Pesan berhasil dikirim!");
-      onClose();
+      setIsPending(false);
+      setIsSuccess(true);
+      if (onSuccess) onSuccess();
+      setTimeout(() => {
+        onClose();
+      }, 2000);
       setNewAspiration({ name: "", message: "" });
     } catch (err) {
       isOpen = false;
       console.error(err);
       setMessage("Gagal mengirim pesan.");
     } finally {
+      setTimeout(() => {
+        setIsSuccess(false);
+      }, 2000);
       isOpen = false;
-      setIsPending(false);
     }
   };
 
@@ -80,19 +88,31 @@ export default function Modal({ isOpen, onClose }: ModalProps) {
           <label htmlFor="Message" className="ml-1">
             Message
           </label>
-          <textarea
-            id="Message"
-            maxLength={350}
-            placeholder={`Type Your Message Here!`}
-            onChange={(e) =>
-              setNewAspiration((prev) => ({ ...prev, message: e.target.value }))
-            }
-            className="w-full resize-y overflow-y-auto rounded-lg border p-2 break-words"
-            rows={4}
-            required
-          />
+          <div className="relative">
+            <textarea
+              id="Message"
+              maxLength={350}
+              placeholder={`Type Your Message Here!`}
+              onChange={(e) =>
+                setNewAspiration((prev) => ({
+                  ...prev,
+                  message: e.target.value,
+                }))
+              }
+              className="w-full resize-y overflow-y-auto rounded-lg border p-2 break-words"
+              rows={5}
+              required
+            />
+            <p className="absolute -bottom-2 left-0 rounded-lg border-[1.7px] bg-white px-2 py-1 text-[15px] text-black">
+              {newAspiration.message.length}/350
+            </p>
+          </div>
           {message && (
-            <p className="text-center text-sm text-red-600">{message}</p>
+            <p
+              className={`text-center text-sm ${message == "Pesan berhasil dikirim!" ? "text-cyan-700" : "text-red-600"}`}
+            >
+              {message}
+            </p>
           )}
           <div className="flex justify-end gap-2">
             <button

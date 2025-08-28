@@ -7,6 +7,7 @@ import MessageTable from "@/components/MessageTable";
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [refreshFlag, setRefreshFlag] = useState(0);
 
   return (
     <div className="h-dvh w-full bg-gradient-to-br from-blue-500 to-purple-500">
@@ -27,8 +28,9 @@ export default function Home() {
       <FormModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onSuccess={() => setRefreshFlag((f) => f + 1)}
       ></FormModal>
-      <MessageTable />
+      <MessageTable refreshFlag={refreshFlag} />
     </div>
   );
 }
